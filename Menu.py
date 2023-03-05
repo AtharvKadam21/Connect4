@@ -16,7 +16,6 @@ mydb=mysql.connector.connect(
 
 cur=mydb.cursor()
 
-
 from SinglePlayer import *
 from TwoPlayer import *
 from ThreePlayer import *
@@ -61,12 +60,20 @@ def dbEntry(sender, app_data, user_data):
 
     getdbValues(UserName, BCol, TCol)
 
+def showldb():
+    cur.execute("SELECT * FROM player ORDER BY score DESC")
+    rows = cur.fetchall()
+    return rows
+
 #=========item_registry(s)==========
 with dpg.item_handler_registry(tag="widget handler") as handler:
     dpg.add_item_clicked_handler(callback=ModeValue)
 
 with dpg.item_handler_registry(tag="dbvalues") as handler:
     dpg.add_item_clicked_handler(callback=dbEntry)
+
+with dpg.item_handler_registry(tag="ldb") as handler:
+    dpg.add_item_clicked_handler(callback=showldb)
 
 with dpg.window(label='Select Mode', modal=True, show=False, tag='b0', no_title_bar=True,pos=(280,50)):
         dpg.add_button(label="VS AI", tag='1Play',width=100, height=50)
@@ -94,12 +101,25 @@ with dpg.window(label='Account', modal=True, show=False, tag='b1', no_title_bar=
         dpg.add_button(label="Back", callback=lambda: dpg.configure_item("b1", show=False),width=100, height=30)
 
 
+with dpg.window(label='Leaderboards', modal=True, show=False, tag='b2', no_title_bar=True, pos=(300, 50)):
+    with dpg.group():   
+        with dpg.table(header_row=True):
+            dpg.add_table_column(label='Name    Score')
+            rows=showldb()
+            for i in rows:
+                print(i)
+                with dpg.table_row():
+                    dpg.add_text(f"{i[1]}    {i[2]}")   
+        dpg.add_button(label="Back", callback=lambda: dpg.configure_item("b2", show=False),width=100, height=30)
+
+
+
 with dpg.window(tag="Primary Window", width=700, height=600):
     with dpg.group(pos=(300,50)):
         dpg.add_text("Connect 4")
         dpg.add_button(label="Play", callback=lambda: dpg.configure_item('b0', show=True),width=100, height=40)
         dpg.add_button(label="Account", callback=lambda: dpg.configure_item('b1', show=True),width=100, height=40)
-        dpg.add_button(label="Leaderboard",width=100, height=40)
+        dpg.add_button(label="Leaderboard", callback=lambda: dpg.configure_item('b2', show=True), width=100, height=40)
         dpg.add_button(label="Quit", callback=lambda: dpg.configure_item('Primary Window', show=False),width=100, height=40)
 
 #========binding item to registry=========
