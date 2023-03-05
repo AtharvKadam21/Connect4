@@ -65,6 +65,10 @@ def showldb():
     rows = cur.fetchall()
     return rows
 
+with dpg.font_registry():
+    default_font = dpg.add_font("MagilioRegular-Yzv2O.ttf", 15)
+    second_font = dpg.add_font("NatureBeautyPersonalUse-9Y2DK.ttf", 10)
+
 #=========item_registry(s)==========
 with dpg.item_handler_registry(tag="widget handler") as handler:
     dpg.add_item_clicked_handler(callback=ModeValue)
@@ -117,6 +121,7 @@ with dpg.window(label='Leaderboards', modal=True, show=False, tag='b2', no_title
 with dpg.window(tag="Primary Window", width=700, height=600):
     with dpg.group(pos=(300,50)):
         dpg.add_text("Connect 4")
+        dpg.bind_font(default_font)
         dpg.add_button(label="Play", callback=lambda: dpg.configure_item('b0', show=True),width=100, height=40)
         dpg.add_button(label="Account", callback=lambda: dpg.configure_item('b1', show=True),width=100, height=40)
         dpg.add_button(label="Leaderboard", callback=lambda: dpg.configure_item('b2', show=True), width=100, height=40)
