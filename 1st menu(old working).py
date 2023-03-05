@@ -1,14 +1,15 @@
 import pygame
 
-from G13A import single_player, three_players, two_players
-
+from G13A_copy import single_player, three_players, two_players
 
 pygame.init()
 # Define colors
-white = (255, 255, 255)
-black = (0, 0, 0)
-red = (255, 0, 0)
-yellow=(255,255,0)
+BLUE = (0,0,255)
+WHITE= (255,255,255)
+BLACK = (0,0,0)
+RED = (255,0,0)
+GREEN = (0,255,0)
+YELLOW = (255,255,0)
 
 width = 700
 height = 600
@@ -53,13 +54,13 @@ def main_menu():
                         pygame.quit()
                         quit()
         # Draw the menu on the screen
-        screen.fill(black)
+        screen.fill(BLACK)
         for i in range(len(menu_items)):
             if selected == i:
-                color = yellow
+                color = YELLOW
             else:
-                color = white
-            title = font.render('Connect 4',1,red)
+                color = WHITE
+            title = font.render('Connect 4',1,RED)
             label = font.render(menu_items[i], 1, color)
             screen.blit(title, (width/3, height/8))
             screen.blit(label, (width/2, height/(len(menu_items)+1.5)*(i+1.5)))

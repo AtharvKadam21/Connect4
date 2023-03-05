@@ -1,5 +1,3 @@
-#uses 1st menu(old working uses this file)
-
 import numpy as np
 import random
 import pygame
@@ -7,30 +5,26 @@ import sys
 import math
 
 BLUE = (0,0,255)
+WHITE= (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
 GREEN = (0,255,0)
 YELLOW = (255,255,0)
 
-ROW_COUNT = 6
-COLUMN_COUNT = 7
+PLAYER_PIECE = 1
+AI_PIECE = 2
+
+width = 700
+height = 600
 
 SQUARESIZE = 75
 RADIUS = int(SQUARESIZE/2 - 5)
 
-PLAYER = 0
-AI = 1
-
-EMPTY = 0
-PLAYER_PIECE = 1
-AI_PIECE = 2
-
 WINDOW_LENGTH = 4
 
+EMPTY = 0
 
 screen = pygame.display.set_mode((700, 600))
-
-height = 600
 
 pygame.font.init()
 myfont = pygame.font.SysFont("monospace", 75)
@@ -134,6 +128,7 @@ def score_position(board, piece):
 def is_terminal_node(board):
     return winning_move(board, PLAYER_PIECE) or winning_move(board, AI_PIECE) or len(get_valid_locations(board)) == 0
 
+#=============AI=================
 def minimax(board, depth, alpha, beta, maximizingPlayer):
     valid_locations = get_valid_locations(board)
     is_terminal = is_terminal_node(board)
@@ -186,8 +181,8 @@ def get_valid_locations(board):
             valid_locations.append(col)
     return valid_locations
 
+#========AI choosing move========
 def pick_best_move(board, piece):
-
     valid_locations = get_valid_locations(board)
     best_score = -10000
     best_col = random.choice(valid_locations)
@@ -221,6 +216,13 @@ def single_player():
     print_board(board)
     game_over = False
 
+    ROW_COUNT = 6
+    COLUMN_COUNT = 7
+
+    PLAYER = 0
+    AI = 1
+    turn = random.randint(PLAYER, AI)
+
     width = COLUMN_COUNT * SQUARESIZE
     height = (ROW_COUNT+1) * SQUARESIZE
     
@@ -231,8 +233,7 @@ def single_player():
     pygame.display.update()
 
     myfont = pygame.font.SysFont("monospace", 75)
-
-    turn = random.randint(PLAYER, AI)
+    
 
     while not game_over:
 
@@ -272,39 +273,41 @@ def single_player():
                         draw_board(board)
 
 
-        # # Ask for Player 2 Input
-        if turn == AI and not game_over:        
+                # # Ask for Player 2 Input
+                if turn == AI and not game_over:        
 
-            col = random.randint(0, COLUMN_COUNT-1)
+                    col = random.randint(0, COLUMN_COUNT-1)
 
-            if is_valid_location(board, col):
-                pygame.time.wait(350)
-                row = get_next_open_row(board, col)
-                drop_piece(board, row, col, AI_PIECE)
+                    if is_valid_location(board, col):
+                        pygame.time.wait(350)
+                        row = get_next_open_row(board, col)
+                        drop_piece(board, row, col, AI_PIECE)
 
-                if winning_move(board, AI_PIECE):
-                    label = myfont.render("YELLOW WINS", 1, YELLOW)
-                    screen.blit(label, (40,10))
-                    game_over = True
+                        if winning_move(board, AI_PIECE):
+                            label = myfont.render("YELLOW WINS", 1, YELLOW)
+                            screen.blit(label, (40,10))
+                            game_over = True
 
-                print_board(board)
-                draw_board(board)
+                        print_board(board)
+                        draw_board(board)
 
-                turn += 1
-                turn = turn % 2
+                        turn += 1
+                        turn = turn % 2
 
         if game_over:
             pygame.time.wait(1500)
             screen = pygame.display.set_mode((700, 600))
-           # main_menu()
                                 
 def two_players():
     board = create_board()
     print_board(board)
     game_over = False
-    turn = 0
+    turn = random.randint(0, 1)
 
     SQUARESIZE = 75
+
+    ROW_COUNT = 6
+    COLUMN_COUNT = 7
 
     width = COLUMN_COUNT * SQUARESIZE
     height = (ROW_COUNT+1) * SQUARESIZE
@@ -339,7 +342,7 @@ def two_players():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
 
-                if turn == 0: #RED 
+                if turn == 0: #===========RED================ 
                     posx = event.pos[0]
                     col = int(math.floor(posx/SQUARESIZE))
 
@@ -353,7 +356,7 @@ def two_players():
                             game_over = True
 
 
-                else :  #YELLOW             
+                else :  #==============YELLOW=================             
                     posx = event.pos[0]
                     col = int(math.floor(posx/SQUARESIZE))
 
@@ -375,7 +378,6 @@ def two_players():
                 if game_over:
                     pygame.time.wait(1500)
                     screen = pygame.display.set_mode((700, 600))
-                  #  main_menu()
                     
 def three_players():
     def draw_board(board):
@@ -398,9 +400,11 @@ def three_players():
     board = create_board()
     print_board(board)
     game_over = False
-    turn = 0
+    turn = turn = random.randint(0, 1, 3)
 
     SQUARESIZE = 75
+    COLUMN_COUNT=9
+    ROW_COUNT=7
 
     width = COLUMN_COUNT * SQUARESIZE
     height = (ROW_COUNT+1) * SQUARESIZE
@@ -410,7 +414,6 @@ def three_players():
     RADIUS = int(SQUARESIZE/2 - 5)
 
     screen = pygame.display.set_mode(size)
-
     draw_board(board)
     pygame.display.update()
 
@@ -436,7 +439,7 @@ def three_players():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
 
-                if turn == 0: #RED 
+                if turn == 0: #============RED===============
                     posx = event.pos[0]
                     col = int(math.floor(posx/SQUARESIZE))
 
@@ -450,7 +453,7 @@ def three_players():
                             game_over = True
 
 
-                elif turn == 1:  #YELLOW             
+                elif turn == 1:  #============YELLOW=========       
                     posx = event.pos[0]
                     col = int(math.floor(posx/SQUARESIZE))
 
@@ -463,7 +466,7 @@ def three_players():
                             screen.blit(label, (40,10))
                             game_over = True
 
-                else: #GREEN                  
+                else: #============GREEN==============              
                     posx = event.pos[0]
                     col = int(math.floor(posx/SQUARESIZE))
 
@@ -485,5 +488,4 @@ def three_players():
                 if game_over:
                     pygame.time.wait(3000)
                     screen = pygame.display.set_mode((700, 600))
-                   # main_menu() CHANGE FUNCTION AFTER NEW MENU
 
