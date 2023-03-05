@@ -4,18 +4,24 @@ import pygame
 import sys
 import math
 
+from Menu import ModeValue
+
+def SetInGamevalues():
+    if ModeValue==1:
+        PLAYER_PIECE = 1
+        AI_PIECE = 2
+        ROW_COUNT=6
+        COLUMN_COUNT=7    
+        width = COLUMN_COUNT * SQUARESIZE
+        height = (ROW_COUNT+1) * SQUARESIZE  
+        single_player()  
+
 BLUE = (0,0,255)
 WHITE= (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
 GREEN = (0,255,0)
 YELLOW = (255,255,0)
-
-PLAYER_PIECE = 1
-AI_PIECE = 2
-
-width = 700
-height = 600
 
 SQUARESIZE = 75
 RADIUS = int(SQUARESIZE/2 - 5)
@@ -24,14 +30,8 @@ WINDOW_LENGTH = 4
 
 EMPTY = 0
 
-screen = pygame.display.set_mode((700, 600))
-
 pygame.font.init()
 myfont = pygame.font.SysFont("monospace", 75)
-
-def create_board():
-    board = np.zeros((ROW_COUNT,COLUMN_COUNT))
-    return board
 
 def drop_piece(board, row, col, piece):
     board[row][col] = piece
@@ -195,36 +195,36 @@ def pick_best_move(board, piece):
             best_score = score
             best_col = col
 
-    return best_col 
-    
-def draw_board(board):       
-    for c in range(COLUMN_COUNT):
-        for r in range(ROW_COUNT):            
-            pygame.draw.rect(screen, BLUE, (c*SQUARESIZE, r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
-            pygame.draw.circle(screen, BLACK, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
-
-        for c in range(COLUMN_COUNT):
-            for r in range(ROW_COUNT):        
-                if board[r][c] == PLAYER_PIECE:
-                    pygame.draw.circle(screen, RED, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
-                elif board[r][c] == AI_PIECE: 
-                    pygame.draw.circle(screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
-        pygame.display.update()                               
+    return best_col                      
 
 def single_player():
+    def create_board():
+        board = np.zeros((ROW_COUNT,COLUMN_COUNT))
+        return board
+
+    def draw_board(board):
+        size=(700,600)
+        screen = pygame.display.set_mode(size)     
+        for c in range(COLUMN_COUNT):
+            for r in range(ROW_COUNT):            
+                pygame.draw.rect(screen, BLUE, (c*SQUARESIZE, r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
+                pygame.draw.circle(screen, BLACK, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+
+            for c in range(COLUMN_COUNT):
+                for r in range(ROW_COUNT):        
+                    if board[r][c] == PLAYER_PIECE:
+                        pygame.draw.circle(screen, RED, (int(c*SQUARESIZE+SQUARESIZE/2), size[2]-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+                    elif board[r][c] == AI_PIECE: 
+                        pygame.draw.circle(screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), size[2]-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+            pygame.display.update()          
+
     board = create_board()
     print_board(board)
     game_over = False
 
-    ROW_COUNT = 6
-    COLUMN_COUNT = 7
-
     PLAYER = 0
     AI = 1
     turn = random.randint(PLAYER, AI)
-
-    width = COLUMN_COUNT * SQUARESIZE
-    height = (ROW_COUNT+1) * SQUARESIZE
     
     size = (width, height)
 
@@ -232,8 +232,7 @@ def single_player():
     draw_board(board)
     pygame.display.update()
 
-    myfont = pygame.font.SysFont("monospace", 75)
-    
+    myfont = pygame.font.SysFont("monospace", 75)    
 
     while not game_over:
 
@@ -299,18 +298,37 @@ def single_player():
             screen = pygame.display.set_mode((700, 600))
                                 
 def two_players():
+    ROW_COUNT=6
+    COLUMN_COUNT=7
+
+    width = COLUMN_COUNT * SQUARESIZE
+    height = (ROW_COUNT+1) * SQUARESIZE
+
+    def create_board():
+        board = np.zeros((ROW_COUNT,COLUMN_COUNT))
+        return board
+
+    def draw_board(board):
+        size=(700,600)
+        screen = pygame.display.set_mode(size)     
+        for c in range(COLUMN_COUNT):
+            for r in range(ROW_COUNT):            
+                pygame.draw.rect(screen, BLUE, (c*SQUARESIZE, r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
+                pygame.draw.circle(screen, BLACK, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+
+            for c in range(COLUMN_COUNT):
+                for r in range(ROW_COUNT):        
+                    if board[r][c] == PLAYER_PIECE:
+                        pygame.draw.circle(screen, RED, (int(c*SQUARESIZE+SQUARESIZE/2), size[2]-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+                    elif board[r][c] == AI_PIECE: 
+                        pygame.draw.circle(screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), size[2]-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+            pygame.display.update()          
+
+
     board = create_board()
     print_board(board)
     game_over = False
     turn = random.randint(0, 1)
-
-    SQUARESIZE = 75
-
-    ROW_COUNT = 6
-    COLUMN_COUNT = 7
-
-    width = COLUMN_COUNT * SQUARESIZE
-    height = (ROW_COUNT+1) * SQUARESIZE
 
     size = (width, height)
 
@@ -380,6 +398,16 @@ def two_players():
                     screen = pygame.display.set_mode((700, 600))
                     
 def three_players():
+    COLUMN_COUNT=9
+    ROW_COUNT=7
+
+    width = COLUMN_COUNT * SQUARESIZE
+    height = (ROW_COUNT+1) * SQUARESIZE
+
+    def create_board():
+        board = np.zeros((ROW_COUNT,COLUMN_COUNT))
+        return board
+
     def draw_board(board):
         for c in range(COLUMN_COUNT):
             for r in range(ROW_COUNT):
@@ -400,14 +428,7 @@ def three_players():
     board = create_board()
     print_board(board)
     game_over = False
-    turn = turn = random.randint(0, 1, 3)
-
-    SQUARESIZE = 75
-    COLUMN_COUNT=9
-    ROW_COUNT=7
-
-    width = COLUMN_COUNT * SQUARESIZE
-    height = (ROW_COUNT+1) * SQUARESIZE
+    turn =random.randint(0, 2)
 
     size = (width, height)
 

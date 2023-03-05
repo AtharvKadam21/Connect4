@@ -1,32 +1,36 @@
 import dearpygui.dearpygui as dpg
 import mysql.connector
-from G13A_copy import *
+import numpy as np
+import random
+import pygame
+import sys
+import math
+
+from SinglePlayer import *
+from TwoPlayer import *
+from ThreePlayer import *
 
 
 dpg.create_context()
 dpg.create_viewport(title='Game', width=700, height=600)
 dpg.setup_dearpygui()
 
-def getSinglePlayer(sender, app_data):
-    single_player()
-
-def getTwoPlayers(sender, app_data):
-    two_players()
-
-def getThreePlayers(sender, app_data):
-    three_players()
-
+def ModeValue(sender, app_data):
+    if app_data[1]=='1Play':
+        oneplay()
+    elif app_data[1]=='2Play':
+        twoplay()
+    else:
+        threeplay()
 
 #=========item_registry==========
 with dpg.item_handler_registry(tag="widget handler") as handler:
-    dpg.add_item_clicked_handler(callback=getSinglePlayer)
-    dpg.add_item_clicked_handler(callback=getTwoPlayers)
-    dpg.add_item_clicked_handler(callback=getThreePlayers)
+    dpg.add_item_clicked_handler(callback=ModeValue)
 
 with dpg.window(label='Select Mode', modal=True, show=False, tag='b0', no_title_bar=True):
         dpg.add_button(label="VS AI", tag='1Play')
-        dpg.add_button(label="2 Players", callback='getTwoPlayers', tag='2Play')
-        dpg.add_button(label="3 Players", callback='getThreePlayers', tag='3Play')
+        dpg.add_button(label="2 Players", tag='2Play')
+        dpg.add_button(label="3 Players", tag='3Play')
         dpg.add_button(label="Back", width=75, callback=lambda: dpg.configure_item("b0", show=False))
 
 with dpg.window(label='Account', modal=True, show=False, tag='b1', no_title_bar=True):
@@ -47,7 +51,7 @@ with dpg.window(label='Account', modal=True, show=False, tag='b1', no_title_bar=
     
     dpg.add_button(label="Back", width=75, callback=lambda: dpg.configure_item("b1", show=False))
 
-with dpg.window(tag="Primary Window"):
+with dpg.window(tag="Primary Window",width=800, height=600):
     dpg.add_text("Connect 4")
     dpg.add_button(label="Play", callback=lambda: dpg.configure_item('b0', show=True))
     dpg.add_button(label="Account", callback=lambda: dpg.configure_item('b1', show=True))
