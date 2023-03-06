@@ -19,6 +19,7 @@ cur=mydb.cursor()
 from SinglePlayer import *
 from TwoPlayer import *
 from ThreePlayer import *
+from SetStartSinglePlayer import *
 
 dpg.create_context()
 dpg.create_viewport(title='Game', width=700, height=600)
@@ -29,8 +30,10 @@ def ModeValue(sender, app_data):
         oneplay()
     elif app_data[1]=='2Play':
         twoplay()
-    else:
+    elif app_data[1]=='3Play':
         threeplay()
+    else:
+        ssoneplay()
 
 def getdbValues(UserName, BCol, TCol):
     b1=(UserName, BCol, TCol)
@@ -81,6 +84,7 @@ with dpg.item_handler_registry(tag="ldb") as handler:
 
 with dpg.window(label='Select Mode', modal=True, show=False, tag='b0', no_title_bar=True,pos=(280,50)):
         dpg.add_button(label="VS AI", tag='1Play',width=100, height=50)
+        dpg.add_button(label="Set Start VS AI", tag='SS1Play',width=100, height=50)
         dpg.add_button(label="2 Players", tag='2Play',width=100, height=50)
         dpg.add_button(label="3 Players", tag='3Play',width=100, height=50)
         dpg.add_button(label="Back", callback=lambda: dpg.configure_item("b0", show=False),width=100, height=50)
@@ -130,6 +134,7 @@ with dpg.window(tag="Primary Window", width=700, height=600):
 
 #========binding item to registry=========
 dpg.bind_item_handler_registry('1Play', "widget handler")
+dpg.bind_item_handler_registry('SS1Play', "widget handler")
 dpg.bind_item_handler_registry('2Play', "widget handler")
 dpg.bind_item_handler_registry('3Play', "widget handler")
 
